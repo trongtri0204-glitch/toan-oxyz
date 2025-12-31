@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Ôn Tập Tích Phân - ThS. Trần Trọng Trị</title>
+    <title>Hệ Thống Kiểm Tra Tích Phân - ThS. Trần Trọng Trị</title>
     <script>
       window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, options: { processHtmlClass: 'mathjax-process' } };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
     <style>
         :root { --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --text: #c9d1d9; --correct: #238636; --wrong: #da3633; --gold: #f1c40f; --ai: #8a2be2; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; user-select: none; }
@@ -18,37 +17,47 @@
         #nameModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .name-box { background: var(--card); padding: 40px; border-radius: 15px; text-align: center; border: 2px solid var(--accent); max-width: 400px; }
         .name-input { padding: 12px; width: 80%; font-size: 1.1rem; border-radius: 6px; border: 1px solid var(--accent); margin-bottom: 20px; background: #0d1117; color: white; outline: none; }
-        
         .game-container { max-width: 1050px; width: 100%; display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
         @media (max-width: 850px) { .game-container { grid-template-columns: 1fr; } }
-        
         .quiz-card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #30363d; min-height: 580px; display: flex; flex-direction: column; }
-        .part-header { color: var(--gold); font-weight: bold; background: #21262d; padding: 10px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid var(--gold); }
+        .part-header { color: var(--gold); font-weight: bold; background: #21262d; padding: 12px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid var(--gold); font-size: 0.95rem; line-height: 1.4; }
         .question-title { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; display: block; }
         .question-text { font-size: 1.1rem; margin-bottom: 20px; line-height: 1.8; text-align: justify; }
-        .btn { background: #21262d; border: 1px solid #30363d; color: var(--text); padding: 12px 20px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.3s; margin-bottom: 5px; }
+        .options-grid { display: grid; gap: 10px; flex-grow: 1; }
+        .btn { background: #21262d; border: 1px solid #30363d; color: var(--text); padding: 15px 20px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.3s; font-size: 1rem; display: flex; align-items: flex-start; gap: 10px; }
+        .btn b { color: var(--accent); min-width: 20px; }
         .btn.selected { background: #30363d; border-color: var(--accent); border-width: 2px; }
-        .tf-row { display: flex; align-items: center; justify-content: space-between; background: #0d1117; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #30363d; }
-        .btn-tf { padding: 6px 12px; border: 1px solid #30363d; border-radius: 4px; cursor: pointer; background: #21262d; color: #fff; }
+        .tf-row { display: flex; align-items: center; justify-content: space-between; background: #0d1117; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #30363d; }
+        .tf-label { flex: 1; display: flex; gap: 8px; padding-right: 10px; }
+        .tf-label b { color: var(--accent); }
+        .btn-tf { padding: 8px 15px; border: 1px solid #30363d; border-radius: 4px; cursor: pointer; background: #21262d; color: #fff; font-weight: bold; }
         .btn-tf.active-t { background: var(--correct); }
         .btn-tf.active-f { background: var(--wrong); }
         
+        /* Numpad to rõ */
+        .answer-display { background: #000; color: var(--accent); font-size: 2.5rem; padding: 15px; border-radius: 10px; border: 2px solid var(--accent); min-width: 220px; text-align: center; height: 65px; display: flex; align-items: center; justify-content: center; font-family: monospace; margin-bottom: 20px; }
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 350px; }
+        .num-btn { background: #30363d; border: 1px solid var(--accent); color: #fff; padding: 20px; border-radius: 12px; cursor: pointer; font-size: 1.5rem; font-weight: bold; transition: 0.2s; }
+        .num-btn:active { background: var(--accent); transform: scale(0.95); }
+
         .image-box { position: relative; width: 350px; height: 260px; border: 4px solid var(--card); border-radius: 12px; overflow: hidden; margin: 0 auto; background: #000; }
         .grid-overlay { position: absolute; top:0; left:0; width: 100%; height: 100%; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(4, 1fr); z-index: 100; }
         .tile { background: #2c3e50; border: 1px solid var(--bg); transition: 0.6s; }
         .tile.open { opacity: 0; transform: scale(0.1); pointer-events: none; }
         
-        .next-btn { margin-top: 20px; width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .next-btn { margin-top: 25px; width: 100%; padding: 18px; background: var(--gold); color: #000; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
         .img-container { text-align: center; margin: 15px 0; background: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
-        .img-container img { max-height: 200px; }
+        .img-container img { max-height: 220px; }
 
-        /* KẾT QUẢ CUỐI BÀI */
+        /* PHẦN LỜI GIẢI CHI TIẾT CUỐI BÀI */
         #final-area { display: none; width: 100%; max-width: 900px; }
-        .sol-card { background: var(--card); padding: 30px; border-radius: 15px; margin-top: 30px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .ai-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin-top: 20px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .sol-card { background: var(--card); padding: 30px; border-radius: 15px; margin-top: 35px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .sol-card .original-q { border-bottom: 1px dashed #30363d; padding-bottom: 20px; }
+        .sol-card .options-review { margin-top: 15px; padding-left: 20px; }
+        .ai-btn { background: linear-gradient(45deg, #4b0082, #8a2be2); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin-top: 20px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; transition: 0.3s; }
+        .ai-btn:hover { box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
         .ai-sol-box { display: none; background: #0d1117; padding: 25px; border-radius: 12px; border-left: 5px solid var(--ai); margin-top: 20px; line-height: 2; animation: slideDown 0.4s ease-out; }
-        .pdf-btn { background: #ff4757; color: white; border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; font-weight: bold; margin: 20px 0; font-size: 1rem; width: 100%; }
-        
+        .pdf-btn { background: #ff4757; color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; margin-bottom: 30px; font-size: 1.1rem; width: 100%; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3); }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -57,16 +66,15 @@
 <div id="nameModal">
     <div class="name-box">
         <h2 style="color:var(--gold)">HỆ THỐNG KIỂM TRA</h2>
-        <p>Chuyên đề: Tích phân & Ứng dụng thực tế</p>
-        <p>ThS. Trần Trọng Trị</p>
-        <input type="text" id="studentName" class="name-input" placeholder="Họ và Tên của em...">
-        <button class="btn" style="text-align:center; width:100%; background:var(--accent); color:white" onclick="startGame()">BẮT ĐẦU</button>
+        <p>ThS. Trần Trọng Trị - GV Chuyên Toán Gia Định</p>
+        <input type="text" id="studentName" class="name-input" placeholder="Họ và Tên học sinh...">
+        <button class="btn" style="text-align:center; width:100%; background:var(--accent); color:white; justify-content: center;" onclick="startGame()">BẮT ĐẦU ÔN TẬP</button>
     </div>
 </div>
 
 <header>
-    <h1 style="color:var(--gold)">CHINH PHỤC TÍCH PHÂN 12</h1>
-    <p>ThS. Trần Trọng Trị - GV Chuyên Toán Trường THPT Gia Định  </p>
+    <h1 style="color:var(--gold)">CHINH PHỤC GIẢI TÍCH 12</h1>
+    <p>Trường THPT Gia Định - ThS. Trần Trọng Trị</p>
 </header>
 
 <div class="game-container" id="game-main">
@@ -88,82 +96,86 @@
         <div class="status">
             <div style="font-size: 1.5rem; color: var(--gold);">ĐIỂM: <span id="score">0.00</span> / 10</div>
             <div id="student-display" style="color:var(--accent); margin: 5px 0;">Học sinh: ...</div>
-            <div style="color: #8b949e;">Tiến độ: <span id="total-q">1</span> / 22</div>
+            <div style="color: #8b949e;">Tổng tiến độ: <span id="total-q">1</span> / 22</div>
         </div>
     </div>
 </div>
 
 <div id="final-area">
     <div style='text-align:center; padding:30px; background:var(--card); border-radius:15px; border:2px solid var(--gold);'>
-        <h2 style='color:var(--gold); margin-top:0;'>KẾT QUẢ BÀI THI</h2>
-        <h3 style='color:var(--accent)' id="final-score-display"></h3>
-        <button class="pdf-btn" onclick="exportPDF()">📥 TẢI TOÀN BỘ ĐỀ & LỜI GIẢI (PDF)</button>
+        <h2 style='color:var(--gold); margin-top:0;'>HOÀN THÀNH BÀI THI</h2>
+        <h3 style='color:var(--accent); font-size: 1.8rem;' id="final-score-display"></h3>
+        <button class="pdf-btn" onclick="exportPDF()">📥 TẢI TOÀN BỘ LỜI GIẢI CHI TIẾT (PDF)</button>
     </div>
     
     <div id="sol-content" class="mathjax-process"></div>
     
-    <button class="btn" style="margin: 40px 0; width:100%; text-align:center" onclick="location.reload()">QUAY LẠI TRANG CHỦ</button>
+    <button class="btn" style="margin: 40px 0; width:100%; text-align:center; justify-content: center;" onclick="location.reload()">LÀM LẠI BÀI THI</button>
 </div>
 
 <script>
+    document.onkeydown = function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false; };
+
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu-MpFNTly4cIhVq0cv2YclWmyLtxjQllhss1LzBr2p3vtC02F83Suhh9rUdIoNBzRww/exec";
     let studentName = "", currentIdx = 0, score = 0, userAns = "", v2Ans = [], selectedV1 = null;
 
     const questions = [
         // PHẦN I
-        { part: 1, num: 1, type: 'v1', q: "Mệnh đề nào dưới đây là <b>sai</b>?", a: ["$\\displaystyle \\int f'(x) dx = f(x)+C$","$\\displaystyle \\int [f(x)+g(x)] dx = \\int f(x)dx + \\int g(x)dx$","$\\displaystyle \\int k f(x) dx = k \\int f(x)dx$","$\\displaystyle \\int [f(x)-g(x)] dx = \\int f(x)dx - \\int g(x)dx$"], c: "Mg==", sol: "• Khẳng định A, B, D là các tính chất cơ bản.<br>• Khẳng định C <b>Sai</b> vì hằng số $k$ phải thỏa mãn điều kiện $k \\neq 0$. Khi $k=0$, vế trái là hằng số $C$, vế phải là $0$." },
-        { part: 1, num: 2, type: 'v1', q: "Nguyên hàm của hàm số $f(x) = \\cos x$ là:", a: ["$-\\sin x + C$", "$\\sin x + C$", "$\\cos x + C$", "$-\\cos x + C$"], c: "MQ==", sol: "Ta có $(\\sin x)' = \\cos x$, do đó $\\displaystyle \\int \\cos x dx = \\sin x + C$." },
-        { part: 1, num: 3, type: 'v1', q: "Tìm họ nguyên hàm của hàm số $f(x) = 5^x$.", a: ["$5^x + C$", "$5^x \\ln 5 + C$", "$\\displaystyle \\dfrac{5^x}{\\ln 5} + C$", "$\\displaystyle \\dfrac{5^{x+1}}{x+1} + C$"], c: "Mg==", sol: "Áp dụng công thức nguyên hàm hàm số mũ: $\\displaystyle \\int a^x dx = \\dfrac{a^x}{\\ln a} + C$." },
-        { part: 1, num: 4, type: 'v1', q: "Cho $F(x)$ là một nguyên hàm của $f(x)$ trên $K$. Khẳng định nào đúng?", a: ["$f'(x) = F(x)$", "$F'(x) = f(x)$", "$F(x) = f(x)$", "$F'(x) = f'(x)$"], c: "MQ==", sol: "Theo định nghĩa, $F(x)$ là nguyên hàm của $f(x)$ nếu $F'(x) = f(x)$." },
-        { part: 1, num: 5, type: 'v1', q: "Tìm $\\displaystyle \\int \\dfrac{1}{x^2} dx$.", a: ["$\\displaystyle \\dfrac{1}{x} + C$", "$\\displaystyle -\\dfrac{1}{x} + C$", "$\\displaystyle \\dfrac{1}{2x} + C$", "$\\ln x^2 + C$"], c: "MQ==", sol: "Ta có $\\displaystyle \\int x^{-2} dx = \\dfrac{x^{-1}}{-1} + C = -\\dfrac{1}{x} + C$." },
-        { part: 1, num: 6, type: 'v1', q: "Họ nguyên hàm của hàm số $f(x) = x^2 - 3x + \\dfrac{1}{x}$ là:", a: ["$F(x) = 2x - 3 - 1/x^2 + C$", "$\\displaystyle F(x) = \\dfrac{x^3}{3} - \\dfrac{3}{2}x^2 + \\ln |x| + C$", "$\\displaystyle F(x) = \\dfrac{x^3}{3} + \\dfrac{3}{2}x^2 + \\ln x + C$", "$\\displaystyle F(x) = \\dfrac{x^3}{3} - \\dfrac{3}{2}x^2 + \\ln x + C$"], c: "MQ==", sol: "Tính nguyên hàm từng số hạng: $x^2 \\to x^3/3$; $-3x \\to -3x^2/2$; $1/x \\to \\ln|x|$." },
-        { part: 1, num: 7, type: 'v1', q: "Cho hàm số $y=f(x)$ liên tục trên $K$ và $a, b, c \\in K$. Mệnh đề nào sau đây <b>sai</b>?", a: ["$\\displaystyle \\int_a^b f(x)dx + \\int_c^b f(x)dx = \\int_a^c f(x)dx$", "$\\displaystyle \\int_a^b f(x)dx = \\int_a^b f(t)dt$", "$\\displaystyle \\int_a^b f(x)dx = -\\int_b^a f(x)dx$", "$\\displaystyle \\int_a^a f(x)dx = 0$"], c: "MA==", sol: "Khẳng định A <b>Sai</b>. Theo tính chất chèn điểm: $\\int_a^c + \\int_c^b = \\int_a^b$." },
-        { part: 1, num: 8, type: 'v1', q: "Hiệu số $F(0)-F(1)$ bằng:", a: ["$\\displaystyle \\int_0^1 f(x)dx$", "$\\displaystyle \\int_0^1 F(x)dx$", "$\\displaystyle \\int_1^0 F(x)dx$", "$\\displaystyle \\int_1^0 f(x)dx$"], c: "Mw==", sol: "Theo Newton-Leibniz: $F(b)-F(a) = \\int_a^b f(x)dx$. Ở đây $a=1, b=0$." },
-        { part: 1, num: 9, type: 'v1', q: "Cho $f(1)=2, f(3)=9$. Tính $I = \\displaystyle \\int_1^3 f'(x)dx$.", a: ["11", "7", "2", "18"], c: "MQ==", sol: "$I = f(3) - f(1) = 9 - 2 = 7$." },
-        { part: 1, num: 10, type: 'v1', q: "Diện tích hình phẳng $y=f(x)$, trục hoành, $x=a, x=b$ là:", a: ["$\\pi \\int f^2$", "$\\int f$", "$\\pi \\int |f|$", "$\\displaystyle \\int_a^b |f(x)|dx$"], c: "Mw==", sol: "Diện tích luôn là tích phân của giá trị tuyệt đối: $\\displaystyle S = \\int_a^b |f(x)| dx$." },
-        { part: 1, num: 11, type: 'v1', q: "Khẳng định nào đúng về diện tích $S$ giới hạn bởi $f_1(x), f_2(x)$? <div class='img-container'><img src='cau11.png'></div>", a: ["$S = \\displaystyle \\int_a^b [f_2(x)-f_1(x)] dx$", "$\\displaystyle S = \\int_a^b [f_1(x)-f_2(x)] dx$", "$S = \\pi \\int [f_1-f_2]^2 dx$", "$S = \\pi \\int [f_1-f_2] dx$"], c: "MQ==", sol: "Nhìn hình, trên $[a,b]$, $f_1(x) > f_2(x)$ nên $\\displaystyle S = \\int_a^b (f_1(x)-f_2(x))dx$." },
-        { part: 1, num: 12, type: 'v1', q: "Thể tích $V$ có diện tích thiết diện $S(x)$ là:", a: ["$\\int_b^a S$", "$\\pi \\int S$", "$\\pi \\int S^2$", "$\\displaystyle \\int_a^b S(x)dx$"], c: "Mw==", sol: "Công thức tổng quát: $\\displaystyle V = \\int_a^b S(x)dx$." },
+        { part: 1, type: 'v1', num: 1, q: "Mệnh đề nào dưới đây là <b>sai</b>?", a: ["$\\displaystyle \\int f'(x) dx = f(x)+C$ với mọi hàm $f(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int [f(x)+g(x)] dx = \\int f(x)dx + \\int g(x)dx$ với mọi hàm $f(x), g(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int k f(x) dx = k \\int f(x)dx$ với mọi hằng số $k$ và với mọi hàm số $f(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int [f(x)-g(x)] dx = \\int f(x)dx - \\int g(x)dx$ với mọi hàm $f(x), g(x)$ có đạo hàm trên $\\mathbb{R}$"], c: "Mg==", sol: "<b>Giải chi tiết:</b><br>• Khẳng định A, B, D là định nghĩa và tính chất cơ bản.<br>• Khẳng định C <b>Sai</b> vì thiếu điều kiện hằng số $k \\neq 0$. Khi $k=0$, vế trái là hằng số $C$, vế phải là 0." },
+        { part: 1, type: 'v1', num: 2, q: "Nguyên hàm của hàm số $f(x) = \\cos x$ là:", a: ["$-\\sin x + C$", "$\\sin x + C$", "$\\cos x + C$", "$-\\cos x + C$"], c: "MQ==", sol: "Ta có đạo hàm $(\\sin x)' = \\cos x$, do đó $\\displaystyle \\int \\cos x dx = \\sin x + C$." },
+        { part: 1, type: 'v1', num: 3, q: "Tìm họ nguyên hàm của hàm số $f(x) = 5^x$.", a: ["$5^x + C$", "$5^x \\ln 5 + C$", "$\\displaystyle \\dfrac{5^x}{\\ln 5} + C$", "$\\displaystyle \\dfrac{5^{x+1}}{x+1} + C$"], c: "Mg==", sol: "Áp dụng công thức nguyên hàm hàm số mũ: $\\displaystyle \\int a^x dx = \\dfrac{a^x}{\\ln a} + C$." },
+        { part: 1, type: 'v1', num: 4, q: "Cho hàm số $f(x)$ xác định trên $K$ và $F(x)$ là một nguyên hàm của $f(x)$ trên $K$. Khẳng định nào đúng?", a: ["$f'(x) = F(x), \\forall x \\in K$", "$F'(x) = f(x), \\forall x \\in K$", "$F(x) = f(x), \\forall x \\in K$", "$F'(x) = f'(x), \\forall x \\in K$"], c: "MQ==", sol: "Theo định nghĩa: $F(x)$ là nguyên hàm của $f(x)$ nếu $F'(x) = f(x)$ với mọi $x \\in K$." },
+        { part: 1, type: 'v1', num: 5, q: "Tìm $\\displaystyle \\int \\dfrac{1}{x^2} dx$.", a: ["$\\displaystyle \\dfrac{1}{x} + C$", "$\\displaystyle -\\dfrac{1}{x} + C$", "$\\displaystyle \\dfrac{1}{2x} + C$", "$\\ln x^2 + C$"], c: "MQ==", sol: "Sử dụng nguyên hàm lũy thừa: $\\displaystyle \\int x^{-2} dx = \\dfrac{x^{-1}}{-1} + C = -\\dfrac{1}{x} + C$." },
+        { part: 1, type: 'v1', num: 6, q: "Họ các nguyên hàm của hàm số $f(x) = x^2 - 3x + \\dfrac{1}{x}$ là:", a: ["$F(x) = 2x - 3 - 1/x^2 + C$", "$\\displaystyle F(x) = \\dfrac{x^3}{3} - \\dfrac{3}{2}x^2 + \\ln |x| + C$", "$\\displaystyle F(x) = \\dfrac{x^3}{3} + \\dfrac{3}{2}x^2 + \\ln x + C$", "$\\displaystyle F(x) = \\dfrac{x^3}{3} - \\dfrac{3}{2}x^2 + \\ln x + C$"], c: "MQ==", sol: "Nguyên hàm từng hạng tử: $\\displaystyle \\int x^2 dx = \\dfrac{x^3}{3}$; $\\displaystyle \\int -3x dx = -\\dfrac{3x^2}{2}$; $\\displaystyle \\int \\dfrac{1}{x} dx = \\ln|x|$." },
+        { part: 1, type: 'v1', num: 7, q: "Cho hàm số $y=f(x)$ liên tục trên $K$ và $a, b, c \\in K$. Mệnh đề nào sau đây <b>sai</b>?", a: ["$\\displaystyle \\int_a^b f(x)dx + \\int_c^b f(x)dx = \\int_a^c f(x)dx$", "$\\displaystyle \\int_a^b f(x)dx = \\int_a^b f(t)dt$", "$\\displaystyle \\int_a^b f(x)dx = -\\int_b^a f(x)dx$", "$\\displaystyle \\int_a^a f(x)dx = 0$"], c: "MA==", sol: "Khẳng định A Sai. Theo tính chất cộng cận: $\\int_a^c + \\int_c^b = \\int_a^b$." },
+        { part: 1, type: 'v1', num: 8, q: "Cho $F(x)$ là một nguyên hàm của hàm số $f(x)$. Khi đó hiệu số $F(0)-F(1)$ bằng:", a: ["$\\displaystyle \\int_0^1 f(x)dx$", "$\\displaystyle \\int_0^1 F(x)dx$", "$\\displaystyle \\int_1^0 F(x)dx$", "$\\displaystyle \\int_1^0 f(x)dx$"], c: "Mw==", sol: "Theo Newton-Leibniz: $\\displaystyle \\int_a^b f(x)dx = F(b)-F(a)$. Thay $a=1, b=0$." },
+        { part: 1, type: 'v1', num: 9, q: "Cho hàm số $f(x)$ có $f(1)=2, f(3)=9$. Tính $I = \\displaystyle \\int_1^3 f'(x)dx$.", a: ["11", "7", "2", "18"], c: "MQ==", sol: "$I = f(3) - f(1) = 9 - 2 = 7$." },
+        { part: 1, type: 'v1', num: 10, q: "Diện tích hình phẳng giới hạn bởi $y=f(x)$, trục hoành, $x=a, x=b(a<b)$ là:", a: ["$\\displaystyle S = \\pi \\int_a^b [f(x)]^2 dx$", "$\\displaystyle S = \\int_a^b f(x)dx$", "$\\displaystyle S = \\pi \\int_a^b |f(x)|dx$", "$\\displaystyle S = \\int_a^b |f(x)|dx$"], c: "Mw==", sol: "Diện tích luôn mang giá trị không âm: $\\displaystyle S = \\int_a^b |f(x)| dx$." },
+        { part: 1, type: 'v1', num: 11, q: "Khẳng định nào đúng về diện tích $S$? <div class='img-container'><img src='cau11.png'></div>", a: ["$S = \\displaystyle \\int_a^b [f_2(x)-f_1(x)] dx$", "$\\displaystyle S = \\int_a^b [f_1(x)-f_2(x)] dx$", "$S = \\displaystyle \\pi \\int_a^b [f_1(x)-f_2(x)]^2 dx$", "$S = \\displaystyle \\pi \\int_a^b [f_1(x)-f_2(x)] dx$"], c: "MQ==", sol: "Trên đoạn $[a, b]$, đồ thị $f_1(x)$ nằm phía trên $f_2(x)$, do đó: $\\displaystyle S = \\int_a^b [f_1(x) - f_2(x)] dx$." },
+        { part: 1, type: 'v1', num: 12, q: "Công thức tính thể tích $V$ giới hạn bởi $x=a, x=b$ có diện tích thiết diện $S(x)$ là:", a: ["$V = \\displaystyle \\int_b^a S(x)dx$", "$V = \\displaystyle \\pi \\int_a^b S(x)dx$", "$V = \\displaystyle \\pi \\int_a^b S^2(x)dx$", "$\\displaystyle V = \\int_a^b S(x)dx$"], c: "Mw==", sol: "Thể tích vật thể cắt bởi thiết diện chuẩn: $\\displaystyle V = \\int_a^b S(x) dx$." },
 
         // PHẦN II
         { 
-            part: 2, num: 1, type: 'v2', q: "Cho $F(x)$ là nguyên hàm của $f(x) = \\dfrac{x^2+1}{x}$ trên $(0;+\\infty)$. Xét các khẳng định:", 
-            items: [ {l: "$F(x) = f'(x)$", r: "ZmFsc2U="}, {l: "$F(x)+2025$ là nguyên hàm", r: "dHJ1ZQ=="}, {l: "$F(x) = x^2 + \\ln x + 2025$", r: "ZmFsc2U="}, {l: "Nếu $F(1)=1.5 \\Rightarrow F(x)=x^2/2+2$", r: "ZmFsc2U="} ], 
-            sol: "• <b>a: Sai.</b> $F'(x)=f(x)$ mới đúng.<br>• <b>b: Đúng.</b> Hằng số cộng thêm không đổi đạo hàm.<br>• <b>c: Sai.</b> $\\displaystyle F(x) = \\dfrac{x^2}{2} + \\ln x + C$.<br>• <b>d: Sai.</b> $C$ giải ra bằng $1$." 
+            part: 2, type: 'v2', num: 1, q: "Biết $F(x)$ là một nguyên hàm của hàm số $f(x) = \\dfrac{x^2+1}{x}$ trên khoảng $(0 ;+\\infty)$. Xét các khẳng định sau:", 
+            items: [ {l: "$F(x) = f'(x), \\forall x \\in (0; +\\infty)$", r: "ZmFsc2U="}, {l: "$F(x)+2025$ cũng là một nguyên hàm của $f(x)$", r: "dHJ1ZQ=="}, {l: "$F(x) = x^2 + \\ln x + 2025$", r: "ZmFsc2U="}, {l: "Biết $F(1) = 3/2$, khi đó $F(x) = \\dfrac{x^2}{2} + 2$", r: "ZmFsc2U="} ], 
+            sol: "• <b>a: Sai.</b> $F'(x)=f(x)$ mới đúng.<br>• <b>b: Đúng.</b> Nguyên hàm chỉ sai khác nhau hằng số $C$.<br>• <b>c: Sai.</b> $\\displaystyle F(x) = \\dfrac{x^2}{2} + \\ln x + C$. Biểu thức đề cho sai hệ số.<br>• <b>d: Sai.</b> Giải $C$: $F(1) = 1/2 + 0 + C = 1.5 \\Rightarrow C=1$. Công thức đúng: $F(x)=\\dfrac{x^2}{2}+\\ln x+1$." 
         },
         { 
-            part: 2, num: 2, type: 'v2', q: "Cho $f(x)=6x^5-x^e$. Gọi $I = \\int 6x^5dx, J = \\int x^edx$.", 
-            items: [ {l: "$A = \\int x^5dx \\Rightarrow A=6I$", r: "ZmFsc2U="}, {l: "$\\int f(x)dx = I+J$", r: "ZmFsc2U="}, {l: "$J = b^e - a^e$", r: "ZmFsc2U="}, {l: "$m+n+p=3$", r: "dHJ1ZQ=="} ], 
-            sol: "• <b>d: Đúng.</b> $\\displaystyle \\int_0^1 f(x)dx = 1 - \\dfrac{1}{e+1}$. Đối chiếu $m=1, n=1, p=1 \\Rightarrow m+n+p=3$." 
+            part: 2, type: 'v2', num: 2, q: "Cho hàm số $f(x)=6x^5-x^e$. Gọi $I = \\displaystyle \\int_a^b 6x^5 dx$ và $J = \\displaystyle \\int_a^b x^e dx$.", 
+            items: [ {l: "Gọi $A = \\displaystyle \\int_a^b x^5 dx$ thì ta có $A=6I$", r: "ZmFsc2U="}, {l: "$\\displaystyle \\int_a^b f(x)dx = I+J$", r: "ZmFsc2U="}, {l: "$J = b^e - a^e$", r: "ZmFsc2U="}, {l: "$\\displaystyle \\int_0^1 f(x)dx = m - \\dfrac{n}{e+p}$. Khi đó $m+n+p=3$", r: "dHJ1ZQ=="} ], 
+            sol: "• <b>a: Sai.</b> Phải là $I=6A$.<br>• <b>b: Sai.</b> $\\int f = I-J$.<br>• <b>d: Đúng.</b> Tích phân bằng $1 - \\dfrac{1}{e+1}$. Suy ra $m=n=p=1 \\Rightarrow Tổng = 3$." 
         },
         { 
-            part: 2, num: 3, type: 'v2', q: "Cho hàm số $f(x) = x+5-\\dfrac{6}{x}$ trên $\\mathbb{R}\\backslash\\{0\\}$.", 
-            items: [ {l: "$f(x)$ là nguyên hàm của $g(x)=1+6/x^2$", r: "dHJ1ZQ=="}, {l: "$\\int f = 0.5x^2+5x-6\\ln x + C$", r: "ZmFsc2U="}, {l: "Nếu $F(1)=5 \\Rightarrow F(2)=5+\\int_1^2 f$", r: "dHJ1ZQ=="}, {l: "$G(-6)=-13-6\\ln 3$", r: "dHJ1ZQ=="} ], 
-            sol: "• <b>a: Đúng.</b> $f'(x) = g(x)$.<br>• <b>b: Sai.</b> Thiếu trị tuyệt đối.<br>• <b>c, d: Đúng.</b> Áp dụng chuẩn định lý Newton-Leibniz." 
+            part: 2, type: 'v2', num: 3, q: "Cho hàm số $f(x) = x+5-\\dfrac{6}{x}$ trên $\\mathbb{R}\\backslash\\{0\\}$.", 
+            items: [ {l: "$f(x)$ là một nguyên hàm của hàm số $g(x) = 1+6/x^2$", r: "dHJ1ZQ=="}, {l: "$\\displaystyle \\int f(x)dx = 0.5x^2+5x-6\\ln x + C$", r: "ZmFsc2U="}, {l: "Nếu $F(1)=5$ thì $F(2)=5+\\int_1^2 f(x)dx$", r: "dHJ1ZQ=="}, {l: "$G(1)=4, G(2)+G(-1)=5 \\Rightarrow G(-6)=-13-6\\ln 3$", r: "dHJ1ZQ=="} ], 
+            sol: "• <b>a: Đúng.</b> $f'(x) = g(x)$.<br>• <b>b: Sai.</b> Thiếu trị tuyệt đối trong $\\ln|x|$.<br>• <b>c, d: Đúng.</b> Vận dụng đúng công thức Newton-Leibniz và giải hệ hằng số." 
         },
         { 
-            part: 2, num: 4, type: 'v2', q: "Cho BBT đạo hàm $f'(x)$ trên $(0;+\\infty)$. <div class='img-container'><img src='cau4_ds.png'></div>", 
-            items: [ {l: "$\\int_2^5 f'dx = f(5)-f(2)$", r: "dHJ1ZQ=="}, {l: "$\\int_2^3 f'dx = 1$", r: "ZmFsc2U="}, {l: "Diện tích vùng giới hạn là $0.5$", r: "ZmFsc2U="}, {l: "Nếu $\\int_2^5 |f'|=5 \\Rightarrow f(5)=5$", r: "ZmFsc2U="} ], 
-            sol: "• <b>b: Sai.</b> Vì $f'(x) < 0$ trên $(2,3)$ nên tích phân âm.<br>• <b>d: Sai.</b> Chỉ suy ra được $f(2)+f(5)=3$." 
+            part: 2, type: 'v2', num: 4, q: "Cho hàm số $y=f(x)$ có bảng biến thiên của đạo hàm $f'(x)$ trên $(0;+\\infty)$ như sau: <div class='img-container'><img src='cau4_ds.png'></div>", 
+            items: [ {l: "$\\displaystyle \\int_2^5 f'(x)dx = f(5)-f(2)$", r: "dHJ1ZQ=="}, {l: "$\\displaystyle \\int_2^3 f'(x)dx = 1$", r: "ZmFsc2U="}, {l: "Diện tích giới hạn bởi $f'(x), Ox, x=2, x=3$ bằng $1/2$", r: "ZmFsc2U="}, {l: "Nếu $\\displaystyle \\int_2^5 |f'(x)|dx = 5$ thì $f(5)=5$", r: "ZmFsc2U="} ], 
+            sol: "• <b>b: Sai.</b> $f(x)$ giảm trên $(2,3)$ nên tích phân âm.<br>• <b>d: Sai.</b> Tích phân ra $f(2)+f(5)=3$, không thể suy ra $f(5)=5$." 
         },
 
         // PHẦN III
-        { part: 3, num: 1, type: 'v3', q: "Biết $\\displaystyle \\int (\\sin x - \\cos x)^2 dx = x + \\dfrac{1}{a} \\cos bx + C$. Tính $S = a+b$.", c: "NA==", 
-          sol: "<b>Phân tích:</b> $(\\sin x - \\cos x)^2 = 1 - \\sin 2x$.<br>Nguyên hàm: $\\displaystyle x + \\dfrac{1}{2}\\cos 2x + C$. Suy ra $a=2, b=2 \\Rightarrow a+b=4$." },
-        { part: 3, num: 2, type: 'v3', q: "Cho $\\displaystyle \\int_2^7[2f(x)+3g(x)]=2, \\int_2^7[f(x)-2g(x)]=4$. Tính $\\displaystyle \\int_2^7[f(x)-g(x)]$. (Làm tròn 2 chữ số TP).", c: "My4xNA==", 
-          sol: "<b>Phân tích:</b> Hệ PT: $\\begin{cases} 2A+3B=2 \\\\ A-2B=4 \\end{cases} \\Rightarrow A=16/7, B=-6/7$.<br>Kết quả $A-B = 22/7 \\approx 3.14$." },
-        { part: 3, num: 3, type: 'v3', q: "Cho $F(x)=(ax^2+bx+c)e^x$ là nguyên hàm $(x^2+1)e^x$. Tính $a+b+c$.", c: "Mg==", 
-          sol: "<b>Phân tích:</b> Đạo hàm $F'(x) = [ax^2+(2a+b)x+(b+c)]e^x$. Đồng nhất hệ số $\\Rightarrow a=1, b=-2, c=3$." },
-        { part: 3, num: 4, type: 'v3', q: "Cho hàm số $\\displaystyle f(x) = \\begin{cases} 3x^2-x-9 & x \\ge 2 \\\\ x-1 & x < 2 \\end{cases}$. Tính $\\displaystyle \\int_0^3 f(x)dx$.", c: "Ny41", 
-          sol: "<b>Phân tích:</b> $\\displaystyle \\int_0^2(x-1)dx + \\int_2^3(3x^2-x-9)dx = 0 + 7.5 = 7.5$." },
-        { part: 3, num: 5, type: 'v3', q: `Tính $f(3)$ dựa trên $S_A=4, S_B=10, f(0)=2$. <div class='img-container'><img src='cau5_kq.png'></div>`, c: "LTQ=", 
-          sol: "<b>Phân tích:</b><div class='img-container'><img src='cau5_kq_lg.png'></div><br>$\\displaystyle f(3) = f(0) + \\int_0^1 f' + \\int_1^3 f' = 2 + 4 - 10 = -4$." },
-        { part: 3, num: 6, type: 'v3', q: `Một khuôn viên dạng nửa hình tròn giới hạn bởi parabol $y=x^2$ và đường tròn $y=\\sqrt{20-x^2}$. Tính số tiền (nghìn đồng) trồng hoa Cẩm Tú Cầu (gạch chéo) biết mỗi $m^2$ giá 250 nghìn đồng. (Làm tròn hàng đơn vị). <div class='img-container'><img src='cau6_kq.png'></div>`, c: "NDk4NQ==", 
-          sol: "<b>Phân tích:</b><div class='img-container'><img src='cau6_kq_lg.png'></div><br>1. Giao điểm $x = \\pm 2$.<br>2. Diện tích $\\displaystyle S = \\int_{-2}^2 (\\sqrt{20-x^2}-x^2)dx \\approx 19.9396 m^2$.<br>3. Tiền = $19.9396 \\times 250 \\approx 4985$." }
+        { part: 3, type: 'v3', num: 1, q: "Biết $\\displaystyle \\int (\\sin x - \\cos x)^2 dx = x + \\dfrac{1}{a} \\cos bx + C$. Tính $S = a+b$.", c: "NA==", 
+          sol: "<b>Giải chi tiết:</b><br>$(\\sin x - \\cos x)^2 = 1 - \\sin 2x$.<br>Nguyên hàm: $\\displaystyle x + \\dfrac{1}{2} \\cos 2x + C$.<br>Đối chiếu: $a=2, b=2 \\Rightarrow a+b=4$." },
+        { part: 3, type: 'v3', num: 2, q: "Cho $\\displaystyle \\int_2^7[2f(x)+3g(x)]=2$ và $\\displaystyle \\int_2^7[f(x)-2g(x)]=4$. Tính $\\displaystyle \\int_2^7[f(x)-g(x)]$. (Làm tròn 2 chữ số TP).", c: "My4xNA==", 
+          sol: "<b>Giải chi tiết:</b><br>Hệ: $\\begin{cases} 2A+3B=2 \\\\ A-2B=4 \\end{cases} \\Rightarrow \\begin{cases} A=16/7 \\\\ B=-6/7 \\end{cases}$.<br>Tính $A-B = 22/7 \\approx 3.14$." },
+        { part: 3, type: 'v3', num: 3, q: "Cho $F(x)=(ax^2+bx+c)e^x$ là một nguyên hàm của $f(x)=(x^2+1)e^x$. Tính $a+b+c$.", c: "Mg==", 
+          sol: "<b>Giải chi tiết:</b><br>Đạo hàm $F'(x) = [ax^2+(2a+b)x+(b+c)]e^x$.<br>Đồng nhất hệ số $\\Rightarrow a=1, b=-2, c=3 \\Rightarrow S=2$." },
+        { part: 3, type: 'v3', num: 4, q: "Cho hàm số $\\displaystyle f(x) = \\begin{cases} 3x^2-x-9 & \\text{khi } x \\ge 2 \\\\ x-1 & \\text{khi } x < 2 \\end{cases}$. Tính $\\displaystyle I = \\int_0^3 f(x)dx$.", c: "Ny41", 
+          sol: "<b>Giải chi tiết:</b><br>$\\displaystyle I = \\int_0^2(x-1)dx + \\int_2^3(3x^2-x-9)dx = 0 + 7.5 = 7.5$." },
+        { part: 3, type: 'v3', num: 5, q: `Cho hàm số $y=f(x)$ có đồ thị $y=f'(x)$ như hình. Biết $S_A=4, S_B=10$ và $f(0)=2$. Tính $f(3)$. <div class='img-container'><img src='cau5_kq.png'></div>`, c: "LTQ=", 
+          sol: "<b>Giải chi tiết:</b><br><div class='img-container'><img src='cau5_kq_lg.png'></div><br>$\\displaystyle f(3) = f(0) + \\int_0^1 f'(x)dx + \\int_1^3 f'(x)dx = 2 + 4 - 10 = -4$." },
+        { 
+            part: 3, type: 'v3', num: 6, q: `Một khuôn viên dạng nửa hình tròn giới hạn bởi parabol $y=x^2$ và đường tròn $y=\\sqrt{20-x^2}$. Tính số tiền (nghìn đồng) trồng hoa Cẩm Tú Cầu (gạch chéo) biết mỗi $m^2$ giá 250 nghìn đồng. (Làm tròn hàng đơn vị). <div class='img-container'><img src='cau6_kq.png'></div>`, 
+            c: "NDk4NQ==", sol: "<b>Giải chi tiết:</b><br><div class='img-container'><img src='cau6_kq_lg.png'></div><br>1. Giao điểm $x = \\pm 2$.<br>2. Diện tích $\\displaystyle S \\approx 19.9396 m^2$.<br>3. Tiền = $19.9396 \\times 250 \\approx 4985$." 
+        }
     ];
 
     function startGame() {
         const input = document.getElementById('studentName').value;
-        if(!input.trim()) return alert("Nhập tên em nhé!");
+        if(!input.trim()) return alert("Học sinh nhập họ tên trước nhé!");
         studentName = input;
         document.getElementById('nameModal').style.display = 'none';
         document.getElementById('student-display').innerText = "Học sinh: " + studentName;
@@ -189,14 +201,15 @@
 
         if(q.type === 'v1') {
             q.a.forEach((opt, i) => {
-                let b = document.createElement('button'); b.className='btn'; b.innerHTML = opt;
+                let b = document.createElement('button'); b.className='btn'; 
+                b.innerHTML = `<b>${['A','B','C','D'][i]}.</b> ${opt}`;
                 b.onclick = () => { document.querySelectorAll('.btn').forEach(el=>el.classList.remove('selected')); b.classList.add('selected'); selectedV1 = i; };
                 zone.appendChild(b);
             });
         } else if(q.type === 'v2') {
             q.items.forEach((item, i) => {
                 let d = document.createElement('div'); d.className='tf-row';
-                d.innerHTML = `<div style='flex:1'>${['a','b','c','d'][i]}) ${item.l}</div><div style='display:flex;gap:5px'>
+                d.innerHTML = `<div class='tf-label'><b>${['a','b','c','d'][i]})</b> ${item.l}</div><div style='display:flex;gap:5px'>
                     <button class='btn-tf' id='t-${i}' onclick='setV2(${i},true)'>Đúng</button>
                     <button class='btn-tf' id='f-${i}' onclick='setV2(${i},false)'>Sai</button></div>`;
                 zone.appendChild(d);
@@ -217,8 +230,8 @@
     function handleNext() {
         const q = questions[currentIdx];
         let correct = false;
-        if(q.type === 'v1') { if(selectedV1 === null) return alert("Chọn đáp án!"); if(selectedV1.toString() === atob(q.c)) { score += 0.25; correct = true; } }
-        else if(q.type === 'v2') { if(v2Ans.includes(null)) return alert("Chọn hết các ý!"); let cc = 0; q.items.forEach((it, i) => { if(v2Ans[i].toString() === atob(it.r)) cc++; }); score += [0, 0.1, 0.25, 0.5, 1.0][cc]; if(cc === 4) correct = true; }
+        if(q.type === 'v1') { if(selectedV1 === null) return alert("Em chưa chọn đáp án!"); if(selectedV1.toString() === atob(q.c)) { score += 0.25; correct = true; } }
+        else if(q.type === 'v2') { if(v2Ans.includes(null)) return alert("Chọn hết các ý!"); let cCount = 0; q.items.forEach((it, i) => { if(v2Ans[i].toString() === atob(it.r)) cCount++; }); score += [0, 0.1, 0.25, 0.5, 1.0][cCount]; if(cCount === 4) correct = true; }
         else { if(!userAns) return alert("Nhập số!"); if(userAns == atob(q.c)) { score += 0.5; correct = true; } }
         if(correct) openTile();
         document.getElementById('score').innerText = score.toFixed(2);
@@ -233,8 +246,18 @@
         let html = "";
         questions.forEach((q, i) => {
             let pText = q.part === 1 ? "PHẦN I" : (q.part === 2 ? "PHẦN II" : "PHẦN III");
+            let optionsH = "";
+            if(q.type === 'v1') {
+                q.a.forEach((opt, idx) => { optionsH += `<div style='margin:5px 20px;'><b>${['A','B','C','D'][idx]}.</b> ${opt}</div>`; });
+            } else if(q.type === 'v2') {
+                q.items.forEach((it, idx) => { optionsH += `<div style='margin:5px 20px;'><b>${['a','b','c','d'][idx]})</b> ${it.l}</div>`; });
+            }
+
             html += `<div class='sol-card' id='sol-card-${i}'>
-                <b style='color:var(--gold)'>${pText} - Câu ${q.num}:</b> ${q.q}
+                <div class='original-q'>
+                    <b style='color:var(--gold)'>${pText} - Câu ${q.num}:</b><br>${q.q}
+                    <div class='options-review'>${optionsH}</div>
+                </div>
                 <button class='ai-btn' onclick='toggleAI(${i})'><span>🤖</span> AI PHÂN TÍCH & GIẢI CHI TIẾT</button>
                 <div class='ai-sol-box' id='ai-box-${i}'>${q.sol}</div>
             </div>`;
@@ -252,21 +275,15 @@
         const doc = new jsPDF('p', 'mm', 'a4');
         const content = document.getElementById('sol-content');
         const cards = content.getElementsByClassName('sol-card');
-        
-        alert("Đang khởi tạo PDF, vui lòng chờ trong giây lát...");
-        
+        alert("Đang khởi tạo PDF lời giải chi tiết, vui lòng đợi...");
         for (let i = 0; i < cards.length; i++) {
-            // Mở tất cả AI box để chụp
             cards[i].querySelector('.ai-sol-box').style.display = 'block';
-            const canvas = await html2canvas(cards[i], { scale: 2 });
+            const canvas = await html2canvas(cards[i], { scale: 1.5, useCORS: true });
             const imgData = canvas.toDataURL('image/png');
-            const imgProps = doc.getImageProperties(imgData);
             const pdfWidth = doc.internal.pageSize.getWidth() - 20;
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-            
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
             if (i > 0) doc.addPage();
-            doc.text(`Cau ${i+1} - ThS. Tran Trong Tri`, 10, 10);
-            doc.addImage(imgData, 'PNG', 10, 15, pdfWidth, pdfHeight);
+            doc.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
         }
         doc.save(`LoiGiai_TichPhan_GiaDinh.pdf`);
     }

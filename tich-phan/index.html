@@ -16,13 +16,15 @@
         .name-box { background: var(--card); padding: 30px; border-radius: 15px; text-align: center; border: 2px solid var(--accent); max-width: 400px; }
         .name-input { padding: 12px; width: 85%; font-size: 1.1rem; border-radius: 6px; border: 1px solid var(--accent); margin-bottom: 20px; background: #0d1117; color: white; outline: none; }
 
-        .nav-container { width: 100%; max-width: 1050px; display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; justify-content: center; }
-        .nav-btn { width: 35px; height: 35px; border-radius: 5px; border: 1px solid #30363d; background: #21262d; color: white; cursor: pointer; font-size: 0.85rem; }
+        .nav-section { width: 100%; max-width: 1050px; display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 15px; background: #161b22; padding: 10px; border-radius: 10px; border: 1px solid #30363d; }
+        .nav-group { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 5px; }
+        .nav-label { font-size: 0.75rem; color: var(--gold); font-weight: bold; text-transform: uppercase; width: 100%; text-align: center; margin-bottom: 2px; }
+        .nav-btn { width: 32px; height: 32px; border-radius: 5px; border: 1px solid #30363d; background: #21262d; color: white; cursor: pointer; font-size: 0.8rem; }
         .nav-btn.active { background: var(--accent); border-color: white; font-weight: bold; }
         .nav-btn.done { border-bottom: 3px solid var(--correct); }
         .nav-btn.missing { background: #3d1a1a; border: 1px solid var(--wrong); }
 
-        .game-container { max-width: 1050px; width: 100%; display: grid; grid-template-columns: 1fr 300px; gap: 15px; }
+        .game-container { max-width: 1050px; width: 100%; display: grid; grid-template-columns: 1fr 280px; gap: 15px; }
         @media (max-width: 850px) { .game-container { grid-template-columns: 1fr; } }
         
         .quiz-card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #30363d; min-height: 480px; display: flex; flex-direction: column; }
@@ -34,16 +36,15 @@
         .btn.selected { background: #30363d; border-color: var(--accent); border-width: 2px; }
 
         .sidebar { display: flex; flex-direction: column; gap: 15px; }
-        .numpad-box { background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--accent); text-align: center; }
-        .answer-display { background: #000; color: var(--accent); font-size: 1.6rem; padding: 8px; border-radius: 8px; border: 1px solid var(--accent); margin-bottom: 10px; font-family: monospace; min-height: 40px; display: flex; align-items: center; justify-content: center; }
-        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        .num-btn { background: #30363d; border: 1px solid #58a6ff44; color: #fff; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: bold; }
-        .num-btn:active { background: var(--accent); }
+        .numpad-box { background: var(--card); padding: 10px; border-radius: 12px; border: 1px solid var(--accent); text-align: center; }
+        .answer-display { background: #000; color: var(--accent); font-size: 1.5rem; padding: 5px; border-radius: 6px; border: 1px solid var(--accent); margin-bottom: 10px; font-family: monospace; min-height: 35px; display: flex; align-items: center; justify-content: center; }
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .num-btn { background: #30363d; border: 1px solid #58a6ff22; color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: bold; }
 
         .img-container { text-align: center; margin: 10px 0; background: white; padding: 5px; border-radius: 8px; }
         .img-container img { max-height: 160px; }
 
-        .submit-btn { margin-top: 10px; width: 100%; padding: 12px; background: var(--gold); color: #000; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .submit-btn { width: 100%; padding: 12px; background: var(--gold); color: #000; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 5px; }
         
         #final-area { display: none; width: 100%; max-width: 900px; padding: 20px; }
         .sol-card { background: var(--card); padding: 25px; border-radius: 12px; margin-top: 20px; border: 1px solid #30363d; text-align: left; }
@@ -51,7 +52,7 @@
         .ai-sol-box { display: none; background: #0d1117; padding: 20px; border-radius: 10px; border-left: 4px solid var(--ai); margin-top: 15px; line-height: 1.8; }
         .step-title { color: var(--gold); font-weight: bold; display: block; margin-top: 10px; }
         
-        .image-box { position: relative; width: 100%; height: 200px; border: 2px solid var(--card); border-radius: 12px; overflow: hidden; background: #000; }
+        .image-box { position: relative; width: 100%; height: 180px; border: 1px solid #30363d; border-radius: 12px; overflow: hidden; background: #000; }
         .grid-overlay { position: absolute; top:0; left:0; width: 100%; height: 100%; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(4, 1fr); z-index: 100; }
         .tile { background: #2c3e50; border: 1px solid var(--bg); transition: 0.6s; }
         .tile.open { opacity: 0; transform: scale(0.1); pointer-events: none; }
@@ -62,7 +63,7 @@
 <div id="nameModal">
     <div class="name-box">
         <h2 style="color:var(--gold)">HỆ THỐNG KIỂM TRA</h2>
-        <p>ThS. Trần Trọng Trị - GV Chuyên Toán Trường THPT Gia Định</p>
+        <p>ThS. Trần Trọng Trị - GV Chuyên Toán THPT Gia Định</p>
         <input type="text" id="studentName" class="name-input" placeholder="Họ và Tên học sinh...">
         <button class="btn" style="width:100%; background:var(--accent); color:white; justify-content: center;" onclick="startGame()">BẮT ĐẦU</button>
     </div>
@@ -70,10 +71,17 @@
 
 <header>
     <h1 style="color:var(--gold); font-size: 1.5rem; margin: 5px 0;">CHINH PHỤC TÍCH PHÂN 12</h1>
-    <p style="margin: 0; font-size: 0.9rem;">Giáo viên: ThS. Trần Trọng Trị - THPT Gia Định</p>
+    <p style="margin: 0; font-size: 0.9rem;">Giáo viên: ThS. Trần Trọng Trị - Trường THPT Gia Định</p>
 </header>
 
-<div class="nav-container" id="nav-bar"></div>
+<div class="nav-section" id="nav-section" style="display:none;">
+    <div class="nav-label">Phần I: Trắc nghiệm</div>
+    <div class="nav-group" id="nav-p1"></div>
+    <div class="nav-label">Phần II: Đúng/Sai</div>
+    <div class="nav-group" id="nav-p2"></div>
+    <div class="nav-label">Phần III: Trả lời ngắn</div>
+    <div class="nav-group" id="nav-p3"></div>
+</div>
 
 <div class="game-container" id="game-main" style="display:none;">
     <div class="quiz-card">
@@ -91,24 +99,23 @@
 
     <div class="sidebar">
         <div id="numpad-container" class="numpad-box" style="display:none;">
-            <div style="font-weight:bold; margin-bottom:5px; color:var(--gold); font-size: 0.9rem;">NHẬP ĐÁP ÁN</div>
             <div class="answer-display" id="disp">- - -</div>
             <div class="numpad" id="numpad-btns"></div>
         </div>
         <div class="image-box">
-            <img src="hinh_game.jpg" style="width:100%; height:100%; object-fit:cover" onerror="this.src='https://via.placeholder.com/300x200?text=Euler'">
+            <img src="hinh_game.jpg" style="width:100%; height:100%; object-fit:cover" onerror="this.src='https://via.placeholder.com/300x180?text=Euler'">
             <div id="grid" class="grid-overlay"></div>
         </div>
-        <div class="status" style="background: var(--card); padding: 12px; border-radius: 12px;">
-            <div style="font-size: 1rem; color: var(--gold); margin-bottom: 5px;">Học sinh: <span id="student-name-display" style="color:white">...</span></div>
-            <button class="submit-btn" onclick="checkFinalSubmit()">NỘP BÀI TẬP</button>
+        <div class="status" style="background: var(--card); padding: 10px; border-radius: 12px; border: 1px solid #30363d;">
+            <div style="font-size: 0.9rem; color: var(--gold); margin-bottom: 5px;">Điểm: <span id="score-val">0.00</span></div>
+            <button class="submit-btn" onclick="checkFinalSubmit()">NỘP BÀI</button>
         </div>
     </div>
 </div>
 
 <div id="final-area">
     <div style='text-align:center; padding:30px; background:var(--card); border-radius:15px; border:2px solid var(--gold);'>
-        <h2 style='color:var(--gold); margin-top:0;'>KẾT QUẢ CUỐI CÙNG</h2>
+        <h2 style='color:var(--gold); margin-top:0;'>HOÀN THÀNH</h2>
         <h3 style='color:var(--accent); font-size: 2rem;' id="final-score-display"></h3>
     </div>
     <div id="sol-content" class="mathjax-process"></div>
@@ -117,20 +124,22 @@
 
 <script>
     const questions = [
-        { part: 1, type: 'v1', num: 1, q: "Mệnh đề nào dưới đây là <b>sai</b>?", a: ["$\\displaystyle \\int f'(x) dx = f(x)+C$ với mọi hàm $f(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int [f(x)+g(x)] dx = \\int f(x)dx + \\int g(x)dx$ với mọi hàm $f(x), g(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int k f(x) dx = k \\int f(x)dx$ với mọi hằng số $k$ và với mọi hàm số $f(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int [f(x)-g(x)] dx = \\int f(x)dx - \\int g(x)dx$ với mọi hàm $f(x), g(x)$ có đạo hàm trên $\\mathbb{R}$"], c: 2, sol: "<b>AI Phân tích:</b><br><span class='step-title'>• Phân tích lý thuyết:</span> Khẳng định C sai vì thiếu điều kiện $k \\neq 0$. Nếu $k=0$, vế trái $\\int 0 dx = C$, vế phải $0 \\cdot \\int f(x)dx = 0$. Hai vế không nhất thiết bằng nhau." },
-        { part: 1, type: 'v1', num: 2, q: "Nguyên hàm của hàm số $f(x) = \\cos x$ là:", a: ["$-\\sin x + C$", "$\\sin x + C$", "$\\cos x + C$", "$-\\cos x + C$"], c: 1, sol: "<b>AI Phân tích:</b> Nhận biết bảng nguyên hàm cơ bản. Ta có $(\\sin x)' = \\cos x$, do đó $\\int \\cos x dx = \\sin x + C$." },
-        { part: 1, type: 'v1', num: 3, q: "Tìm họ nguyên hàm của hàm số $f(x) = 5^x$.", a: ["$5^x + C$", "$5^x \\ln 5 + C$", "$\\displaystyle \\dfrac{5^x}{\\ln 5} + C$", "$\\displaystyle \\dfrac{5^{x+1}}{x+1} + C$"], c: 2, sol: "<b>AI Phân tích:</b> Áp dụng công thức $\\int a^x dx = \\dfrac{a^x}{\\ln a} + C$." },
-        { part: 1, type: 'v1', num: 4, q: "Cho hàm số $f(x)$ xác định trên $K$ và $F(x)$ là một nguyên hàm của $f(x)$ trên $K$. Khẳng định nào đúng?", a: ["$f'(x) = F(x)$", "$F'(x) = f(x)$", "$F(x) = f(x)$", "$F'(x) = f'(x)$"], c: 1, sol: "<b>AI Phân tích:</b> Định nghĩa nguyên hàm: $F'(x) = f(x)$." },
-        { part: 1, type: 'v1', num: 5, q: "Tìm $\\displaystyle \\int \\dfrac{1}{x^2} dx$.", a: ["$\\displaystyle \\dfrac{1}{x} + C$", "$\\displaystyle -\\dfrac{1}{x} + C$", "$\\displaystyle \\dfrac{1}{2x} + C$", "$\\ln x^2 + C$"], c: 1, sol: "<b>AI Phân tích:</b> $\\int x^{-2} dx = -\\dfrac{1}{x} + C$." },
-        { part: 1, type: 'v1', num: 11, q: "Khẳng định nào đúng về diện tích $S$? <div class='img-container'><img src='cau11.png'></div>", a: ["$S = \\displaystyle \\int_a^b [f_2(x)-f_1(x)] dx$", "$\\displaystyle S = \\int_a^b [f_1(x)-f_2(x)] dx$", "$S = \\displaystyle \\pi \\int_a^b [f_1(x)-f_2(x)]^2 dx$", "$S = \\displaystyle \\pi \\int_a^b [f_1(x)-f_2(x)] dx$"], c: 1, sol: "<b>AI Phân tích:</b> $f_1(x)$ nằm trên $f_2(x)$ nên diện tích bằng tích phân hàm trên trừ hàm dưới." },
+        // Phần I: 12 câu
+        { part: 1, type: 'v1', num: 1, q: "Mệnh đề nào dưới đây là <b>sai</b>?", a: ["$\\displaystyle \\int f'(x) dx = f(x)+C$ với mọi hàm $f(x)$ có đạo hàm trên $\\mathbb{R}$","$\\displaystyle \\int [f(x)+g(x)] dx = \\int f(x)dx + \\int g(x)dx$","$\\displaystyle \\int k f(x) dx = k \\int f(x)dx$","$\\displaystyle \\int [f(x)-g(x)] dx = \\int f(x)dx - \\int g(x)dx$"], c: 2, sol: "<b>AI Phân tích:</b> Khẳng định C sai vì thiếu điều kiện $k \\neq 0$. Nếu $k=0$, $\\int 0 dx = C \\neq 0$." },
+        { part: 1, type: 'v1', num: 2, q: "Nguyên hàm của hàm số $f(x) = \\cos x$ là:", a: ["$-\\sin x + C$", "$\\sin x + C$", "$\\cos x + C$", "$-\\cos x + C$"], c: 1, sol: "<b>AI Phân tích:</b> Ta có $(\\sin x)' = \\cos x$." },
+        { part: 1, type: 'v1', num: 11, q: "Khẳng định nào đúng về diện tích $S$? <div class='img-container'><img src='cau11.png'></div>", a: ["$S = \\displaystyle \\int_a^b [f_2(x)-f_1(x)] dx$", "$\\displaystyle S = \\int_a^b [f_1(x)-f_2(x)] dx$", "$S = \\displaystyle \\pi \\int_a^b [f_1(x)-f_2(x)]^2 dx$", "$S = \\displaystyle \\pi \\int_a^b [f_1(x)-f_2(x)] dx$"], c: 1, sol: "<b>AI Phân tích:</b> $f_1(x)$ nằm trên $f_2(x)$." },
+        
+        // Thầy tự điền thêm các câu khác vào đây để đủ bộ
+        
+        // Phần II: 4 câu
+        { part: 2, type: 'v2', num: 1, q: "Cho $F(x)$ là một nguyên hàm của $f(x) = \\dfrac{x^2+1}{x}$ trên $(0 ;+\\infty)$.", items: [ {l: "$F(x) = f'(x)$", r: false}, {l: "$F(x)+2025$ là nguyên hàm", r: true}, {l: "$F(x) = x^2 + \\ln x + 2025$", r: false}, {l: "Biết $F(1) = 3/2 \\Rightarrow F(x) = \\dfrac{x^2}{2} + 2$", r: false} ], sol: "<b>AI Phân tích:</b> b) Đúng vì hằng số cộng thêm không đổi đạo hàm. d) Sai vì $C=1$." },
+        { part: 2, type: 'v2', num: 4, q: "Cho BBT đạo hàm $f'(x)$ như hình: <div class='img-container'><img src='cau4_ds.png'></div>", items: [ {l: "$\\int_2^5 f'dx = f(5)-f(2)$", r: true}, {l: "$\\int_2^3 f'dx = 1$", r: false}, {l: "Diện tích vùng giới hạn bằng $0.5$", r: false}, {l: "Nếu $\\int_2^5 |f'|=5 \\Rightarrow f(5)=5$", r: false} ], sol: "<b>AI Phân tích:</b> Ý b sai vì f giảm trên (2,3) nên tích phân âm." },
 
-        { part: 2, type: 'v2', num: 1, q: "Biết $F(x)$ là một nguyên hàm của $f(x) = \\dfrac{x^2+1}{x}$ trên $(0 ;+\\infty)$.", items: [ {l: "$F(x) = f'(x)$", r: false}, {l: "$F(x)+2025$ là nguyên hàm", r: true}, {l: "$F(x) = x^2 + \\ln x + 2025$", r: false}, {l: "Biết $F(1) = 3/2 \\Rightarrow F(x) = \\dfrac{x^2}{2} + 2$", r: false} ], sol: "<b>AI Phân tích:</b> a) Sai vì $F'=f$. b) Đúng vì hằng số cộng thêm không đổi đạo hàm. c) Sai: $\\int (x + 1/x) dx = x^2/2 + \\ln x + C$. d) Sai: giải ra $C=1$." },
-        { part: 2, type: 'v2', num: 4, q: "Cho BBT đạo hàm $f'(x)$ trên $(0;+\\infty)$. <div class='img-container'><img src='cau4_ds.png'></div>", items: [ {l: "$\\int_2^5 f'dx = f(5)-f(2)$", r: true}, {l: "$\\int_2^3 f'dx = 1$", r: false}, {l: "Diện tích vùng giới hạn là $0.5$", r: false}, {l: "Nếu $\\int_2^5 |f'|=5 \\Rightarrow f(5)=5$", r: false} ], sol: "<b>AI Phân tích:</b> Ý b sai vì f giảm trên (2,3) nên tích phân âm." },
-
-        { part: 3, type: 'v3', num: 1, q: "Biết $\\displaystyle \\int (\\sin x - \\cos x)^2 dx = x + \\dfrac{1}{a} \\cos bx + C$. Tính $S = a+b$.", c: "4", sol: "<b>AI Phân tích:</b> $(\\sin x - \\cos x)^2 = 1 - \\sin 2x$. Nguyên hàm $\\to x + 0.5\\cos 2x \\to a=2, b=2$." },
-        { part: 3, type: 'v3', num: 4, q: "Cho hàm số $\\displaystyle f(x) = \\begin{cases} 3x^2-x-9 & x \\ge 2 \\\\ x-1 & x < 2 \\end{cases}$. Tính $\\displaystyle I = \\int_0^3 f(x)dx$.", c: "7.5", sol: "<b>AI Phân tích:</b> Tách tích phân tại $x=2$: $I = \\int_0^2(x-1)dx + \\int_2^3(3x^2-x-9)dx = 0 + 7.5 = 7.5$." },
-        { part: 3, type: 'v3', num: 5, q: `Tính $f(3)$ dựa trên $S_A=4, S_B=10, f(0)=2$. <div class='img-container'><img src='cau5_kq.png'></div>`, c: "-4", sol: "<b>AI Phân tích:</b><div class='img-container'><img src='cau5_kq_lg.png'></div><br>$f(3) = f(0) + S_A - S_B = 2 + 4 - 10 = -4$." },
-        { part: 3, type: 'v3', num: 6, q: `Một khuôn viên dạng nửa hình tròn giới hạn bởi parabol $y=x^2$ và đường tròn $y=\\sqrt{20-x^2}$. Tính số tiền (nghìn đồng) trồng hoa Cẩm Tú Cầu (gạch chéo) biết mỗi $m^2$ giá 250 nghìn đồng. (Làm tròn hàng đơn vị). <div class='img-container'><img src='cau6_kq.png'></div>`, c: "4985", sol: "<b>AI Phân tích:</b><div class='img-container'><img src='cau6_kq_lg.png'></div><br>Giao điểm $x = \\pm 2$. Diện tích $\\displaystyle S \\approx 19.9396 m^2$. Tiền = $19.9396 \\times 250 \\approx 4985$." }
+        // Phần III: 6 câu
+        { part: 3, type: 'v3', num: 1, q: "Biết $\\displaystyle \\int (\\sin x - \\cos x)^2 dx = x + \\dfrac{1}{a} \\cos bx + C$. Tính $S = a+b$.", c: "4", sol: "<b>AI Phân tích:</b> Kết quả $a=2, b=2 \\Rightarrow a+b=4$." },
+        { part: 3, type: 'v3', num: 4, q: "Cho hàm số $\\displaystyle f(x) = \\begin{cases} 3x^2-x-9 & x \\ge 2 \\\\ x-1 & x < 2 \\end{cases}$. Tính $I = \\int_0^3 f(x)dx$.", c: "7.5", sol: "<b>AI Phân tích:</b> Tách tích phân tại 2: $I = 0 + 7.5 = 7.5$." },
+        { part: 3, type: 'v3', num: 5, q: "Tính $f(3)$ dựa trên diện tích $S_A=4, S_B=10$ và $f(0)=2$. <div class='img-container'><img src='cau5_kq.png'></div>", c: "-4", sol: "<b>AI Phân tích:</b> $f(3) = 2 + 4 - 10 = -4$." },
+        { part: 3, type: 'v3', num: 6, q: "Tính số tiền (nghìn đồng) tối thiểu để trồng vườn hoa Cẩm Tú Cầu. <div class='img-container'><img src='cau6_kq.png'></div>", c: "4985", sol: "<b>AI Phân tích:</b> Diện tích $\\approx 19.9396$. Tiền = $19.9396 \\times 250 = 4985$." }
     ];
 
     let userAnswers = new Array(questions.length).fill(null);
@@ -139,54 +148,54 @@
 
     function startGame() {
         const input = document.getElementById('studentName').value;
-        if(!input.trim()) return alert("Học sinh nhập họ tên nhé!");
+        if(!input.trim()) return alert("Học sinh nhập tên nhé!");
         studentName = input;
         document.getElementById('nameModal').style.display = 'none';
+        document.getElementById('nav-section').style.display = 'flex';
         document.getElementById('game-main').style.display = 'grid';
         document.getElementById('student-name-display').innerText = studentName;
         
-        const nav = document.getElementById('nav-bar');
-        nav.innerHTML = '';
+        initNav();
+        initGrid();
+        initNumpad();
+        render();
+    }
+
+    function initNav() {
+        const p1 = document.getElementById('nav-p1'), p2 = document.getElementById('nav-p2'), p3 = document.getElementById('nav-p3');
         questions.forEach((q, i) => {
             let b = document.createElement('button');
-            b.className = 'nav-btn'; b.id = 'nav-' + i; b.innerText = i + 1;
+            b.className = 'nav-btn'; b.id = 'nav-' + i; b.innerText = q.num;
             b.onclick = () => jumpToQ(i);
-            nav.appendChild(b);
+            if(q.part === 1) p1.appendChild(b);
+            else if(q.part === 2) p2.appendChild(b);
+            else p3.appendChild(b);
         });
-        
+    }
+
+    function initGrid() {
         const grid = document.getElementById('grid'); grid.innerHTML = "";
         for(let i=0; i<24; i++) {
             let t = document.createElement('div'); t.className='tile'; t.id='tile-'+i; grid.appendChild(t);
         }
+    }
 
+    function initNumpad() {
         const numpadZone = document.getElementById('numpad-btns');
         const keys = [1,2,3,4,5,6,7,8,9,0,'.','-'];
         numpadZone.innerHTML = keys.map(k => `<button class="num-btn" onclick="press('${k}')">${k}</button>`).join('') + 
                              `<button class="num-btn" style="grid-column:span 3; background:var(--wrong)" onclick="press('C')">XÓA</button>`;
-        
-        render();
     }
 
-    function jumpToQ(idx) {
-        currentIdx = idx;
-        render();
-    }
-
-    function moveQ(step) {
-        let next = currentIdx + step;
-        if(next >= 0 && next < questions.length) {
-            currentIdx = next;
-            render();
-        }
-    }
+    function jumpToQ(idx) { currentIdx = idx; render(); }
+    function moveQ(step) { let next = currentIdx + step; if(next >= 0 && next < questions.length) jumpToQ(next); }
 
     function render() {
         const q = questions[currentIdx];
         document.getElementById('part-info').innerHTML = q.part === 1 ? "PHẦN I. TRẮC NGHIỆM 4 PHƯƠNG ÁN" : (q.part === 2 ? "PHẦN II. TRẮC NGHIỆM ĐÚNG SAI" : "PHẦN III. TRẮC NGHIỆM TRẢ LỜI NGẮN");
         document.getElementById('q-title').innerText = "Câu " + q.num + ".";
-        document.getElementById('q-text').innerHTML = q.q;
-        
         const zone = document.getElementById('ans-zone'); zone.innerHTML = '';
+        document.getElementById('q-text').innerHTML = q.q;
         const numpad = document.getElementById('numpad-container'); numpad.style.display = 'none';
 
         if(q.type === 'v1') {
@@ -210,8 +219,7 @@
             });
         } else {
             numpad.style.display = 'block';
-            let cur = userAnswers[currentIdx] || "";
-            document.getElementById('disp').innerText = cur || "- - -";
+            document.getElementById('disp').innerText = userAnswers[currentIdx] || "- - -";
         }
 
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -228,8 +236,7 @@
 
     function press(val) {
         let current = userAnswers[currentIdx] || "";
-        if(val === 'C') current = ""; 
-        else if(current.length < 8) current += val;
+        if(val === 'C') current = ""; else if(current.length < 8) current += val;
         userAnswers[currentIdx] = current;
         document.getElementById('disp').innerText = current || "- - -";
         updateNavStatus();
@@ -249,17 +256,14 @@
         let missing = [];
         questions.forEach((q, i) => {
             let ans = userAnswers[i];
-            let isMissing = false;
-            if(q.type === 'v2') { if(!ans || ans.includes(null)) isMissing = true; }
-            else { if(ans === null || ans === "") isMissing = true; }
-            if(isMissing) missing.push(i + 1);
+            if(q.type === 'v2') { if(!ans || ans.includes(null)) missing.push(i + 1); }
+            else { if(ans === null || ans === "") missing.push(i + 1); }
         });
-
         if(missing.length > 0) {
             missing.forEach(idx => document.getElementById('nav-' + (idx-1)).classList.add('missing'));
-            return alert("Em chưa hoàn thành câu: " + missing.join(", "));
+            return alert("Em chưa hoàn thành các câu: " + missing.join(", "));
         }
-        if(confirm("Xác nhận nộp bài?")) finish();
+        if(confirm("Nộp bài nhé?")) finish();
     }
 
     function finish() {
@@ -271,26 +275,22 @@
                 let cc = 0; q.items.forEach((it, j) => { if(userAnswers[i][j] === it.r) cc++; });
                 finalScore += [0, 0.1, 0.25, 0.5, 1.0][cc]; if(cc === 4) correct = true;
             } else { if(userAnswers[i] == q.c) { finalScore += 0.5; correct = true; } }
-            if(correct) { 
-                const t = document.querySelectorAll('.tile:not(.open)'); 
-                if(t.length) t[Math.floor(Math.random()*t.length)].classList.add('open'); 
-            }
+            if(correct) { let t = document.querySelectorAll('.tile:not(.open)'); if(t.length) t[Math.floor(Math.random()*t.length)].classList.add('open'); }
         });
 
         document.getElementById('game-main').style.display = 'none';
-        document.getElementById('nav-bar').style.display = 'none';
+        document.getElementById('nav-section').style.display = 'none';
         document.getElementById('final-area').style.display = 'block';
-        document.getElementById('final-score-display').innerText = "ĐIỂM: " + finalScore.toFixed(2) + " / 10";
+        document.getElementById('final-score-display').innerText = "Điểm của em: " + finalScore.toFixed(2) + " / 10";
 
         let html = "";
         questions.forEach((q, i) => {
             let optH = "";
             if(q.type === 'v1') q.a.forEach((opt, idx) => optH += `<div><b>${['A','B','C','D'][idx]}.</b> ${opt}</div>`);
             else if(q.type === 'v2') q.items.forEach((it, idx) => optH += `<div><b>${['a','b','c','d'][idx]})</b> ${it.l}</div>`);
-
             html += `<div class='sol-card'>
                 <div style='background:#0d1117; padding:15px; border-radius:8px;'>
-                    <b style='color:var(--gold)'>Câu ${q.num} (${q.part==1?'Phần I':(q.part==2?'Phần II':'Phần III')}):</b><br>${q.q}
+                    <b style='color:var(--gold)'>Câu ${q.num} (${q.part==1?'P.I':(q.part==2?'P.II':'P.III')}):</b><br>${q.q}
                     <div style='margin-top:10px; color:#8b949e;'>${optH}</div>
                 </div>
                 <button class='ai-btn' onclick='toggleAI(${i})'>🤖 AI PHÂN TÍCH & GIẢI CHI TIẾT</button>
@@ -298,10 +298,8 @@
             </div>`;
         });
         document.getElementById('sol-content').innerHTML = html;
-        document.querySelectorAll('.tile').forEach(t => t.classList.add('open'));
         MathJax.typesetPromise();
     }
-
     function toggleAI(idx) { let b = document.getElementById('ai-box-'+idx); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
 </script>
 </body>
